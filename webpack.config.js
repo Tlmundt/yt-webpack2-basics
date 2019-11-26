@@ -1,5 +1,6 @@
 const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const extractPlugin = new MiniCssExtractPlugin({
 	filename: 'main.css',
@@ -13,7 +14,7 @@ module.exports = {
 		filename: 'bundle.js'
 	},
 	devServer: {
-		publicPath: '/dist/',
+// 		publicPath: '/dist/',
 		watchContentBase: true,
 	    compress: true,
 	    stats: {
@@ -50,6 +51,23 @@ module.exports = {
 					  },
 					  'css-loader', 'sass-loader'
 					],
+			},
+			{
+				test: /\.html$/,
+				use: ['html-loader']
+			},
+			{
+				test: /\.(jpg|png)$/,
+				use: [
+					{
+						loader: 'file-loader',
+						options: {
+							name:'[name].[ext]',
+							outputPath: 'img/',
+							publicPath: 'img/'
+						}
+					}
+				]
 			}
 		]
 	},
@@ -57,6 +75,9 @@ module.exports = {
 	    minimize: false
 	},
 	plugins: [
-		extractPlugin
+		extractPlugin,
+		new HtmlWebpackPlugin({
+			template: 'src/index.html'
+		})
 	]
 };
