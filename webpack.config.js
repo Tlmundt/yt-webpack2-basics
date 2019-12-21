@@ -2,6 +2,7 @@ const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const postcssPresetEnv = require('postcss-preset-env');
 
 const extractPlugin = new MiniCssExtractPlugin({
 	filename: 'main.css',
@@ -42,15 +43,25 @@ module.exports = {
 			{
 				test: /\.scss$/,
 				use: [
-					  {
-					    loader: MiniCssExtractPlugin.loader,
-					    options: {
-					      // you can specify a publicPath here
-					      // by default it uses publicPath in webpackOptions.output
-					    },
-					  },
-					  'css-loader', 'sass-loader'
-					],
+					{
+						loader: MiniCssExtractPlugin.loader,
+						options: {
+						  // you can specify a publicPath here
+						  // by default it uses publicPath in webpackOptions.output
+						},
+					},
+					'css-loader',
+					{
+						loader: 'postcss-loader',
+						options: {
+							ident: 'postcss',
+							plugins: () => [
+								postcssPresetEnv(/* pluginOptions */)
+							]
+						}
+					},
+					'sass-loader'
+				],
 			},
 			{
 				test: /\.html$/,
